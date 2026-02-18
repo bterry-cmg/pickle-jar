@@ -286,10 +286,10 @@ body {
   width: 16px;
   height: 16px;
 }
-.round-counter {
-  margin-left: auto;
-  font-size: 0.85rem;
-  color: var(--text-light);
+.player-rounds {
+  font-size: 0.7rem;
+  color: var(--primary);
+  font-weight: 600;
 }
 
 /* Courts grid */
@@ -543,7 +543,6 @@ body {
       <div class="option-group">
         <label><input type="checkbox" id="optRepeats" onchange="App.saveState()"> Minimize repeats</label>
       </div>
-      <div class="round-counter" id="roundCounter">Round: 0</div>
     </div>
 
     <!-- Courts -->
@@ -726,6 +725,11 @@ const App = {
     const game = this.state.activeGames[courtId];
     if (game) {
       this.recordOpponents(game.side1, game.side2);
+      // Increment rounds played for each player in this game
+      for (const id of [...game.side1, ...game.side2]) {
+        const p = this.getPlayer(id);
+        if (p) p.roundsPlayed = (p.roundsPlayed || 0) + 1;
+      }
       this.state.roundHistory.push({
         round: this.state.round,
         courtId,
@@ -1146,7 +1150,6 @@ const App = {
 
     document.getElementById('optSkill').checked = this.state.options.useSkill;
     document.getElementById('optRepeats').checked = this.state.options.minimizeRepeats;
-    document.getElementById('roundCounter').textContent = `Round: ${this.state.round}`;
   },
 
   renderPlayers() {
@@ -1164,6 +1167,7 @@ const App = {
         <span class="player-name">${this.esc(p.name)}</span>
         ${onCourt ? `<span class="player-court-badge">Ct ${courtNum}</span>` : ''}
         ${p.wantsSingles ? `<span class="player-pref wants-singles" onclick="App.toggleSingles(${p.id})" title="Click to remove">1v1</span>` : ''}
+        ${p.roundsPlayed ? `<span class="player-rounds">${p.roundsPlayed} gm${p.roundsPlayed !== 1 ? 's' : ''}</span>` : ''}
         ${p.score !== null ? `<span class="player-score">${p.score}</span>` : ''}
         ${sitouts > 0 && !onCourt ? `<span class="player-sitout">sat ${sitouts}</span>` : ''}
         <button class="btn btn-ghost btn-sm player-remove" onclick="App.removePlayer(${p.id})" ${onCourt ? 'disabled' : ''}>&times;</button>
