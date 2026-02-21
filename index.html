@@ -23,6 +23,40 @@
   --radius: 8px;
 }
 
+[data-theme="dark"] {
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-light: #1e3a5f;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --bg: #111827;
+  --card: #1f2937;
+  --border: #374151;
+  --text: #f3f4f6;
+  --text-light: #9ca3af;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+  --hover-bg: #374151;
+  --side1-bg: #1e3a5f;
+  --side2-bg: #422006;
+  --bench-bg: #451a03;
+  --bench-text: #fca5a5;
+  --pending-bg: #422006;
+  --pending-text: #fbbf24;
+  --pending-border: #92400e;
+}
+
+:root {
+  --hover-bg: #f9fafb;
+  --side1-bg: #eff6ff;
+  --side2-bg: #fef3c7;
+  --bench-bg: #fef2f2;
+  --bench-text: #991b1b;
+  --pending-bg: #fef9c3;
+  --pending-text: #92400e;
+  --pending-border: #f59e0b;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
@@ -55,7 +89,7 @@ body {
 }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary { background: white; color: var(--primary); }
-.btn-primary:hover:not(:disabled) { background: #f0fdf4; }
+.btn-primary:hover:not(:disabled) { background: var(--hover-bg); }
 .btn-assign {
   background: #fbbf24;
   color: #1f2937;
@@ -77,7 +111,7 @@ body {
   border: 1px solid var(--border);
   color: var(--text);
 }
-.btn-outline:hover { background: #f9fafb; }
+.btn-outline:hover { background: var(--hover-bg); }
 .btn-end-game {
   background: #fef2f2;
   color: var(--danger);
@@ -158,9 +192,9 @@ body {
   border-radius: 6px;
   transition: background 0.1s;
 }
-.player-item:hover { background: #f9fafb; }
+.player-item:hover { background: var(--hover-bg); }
 .player-item.on-court {
-  background: #fef2f2;
+  background: var(--bench-bg);
 }
 .player-item.on-court .player-name {
   color: var(--danger);
@@ -176,7 +210,7 @@ body {
 .player-score {
   font-size: 0.8rem;
   color: var(--text-light);
-  background: #f3f4f6;
+  background: var(--hover-bg);
   padding: 2px 6px;
   border-radius: 4px;
   min-width: 20px;
@@ -364,6 +398,12 @@ body {
   font-size: 0.85rem;
   font-style: italic;
 }
+.court-empty.clickable {
+  cursor: pointer;
+  color: var(--primary);
+  font-style: normal;
+  font-weight: 600;
+}
 
 .court-assignment {
   display: flex;
@@ -377,8 +417,8 @@ body {
   flex-direction: column;
   gap: 2px;
 }
-.side-1 { background: #eff6ff; }
-.side-2 { background: #fef3c7; }
+.side-1 { background: var(--side1-bg); }
+.side-2 { background: var(--side2-bg); }
 
 .court-side .side-player {
   font-size: 0.85rem;
@@ -408,6 +448,14 @@ body {
   padding: 1px 6px;
   border-radius: 3px;
 }
+.court-timer {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  background: rgba(255,255,255,0.2);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
 
 /* Sitting out */
 .sitting-out {
@@ -427,11 +475,11 @@ body {
   flex-wrap: wrap;
 }
 .bench-player {
-  background: #fef2f2;
+  background: var(--bench-bg);
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.8rem;
-  color: #991b1b;
+  color: var(--bench-text);
 }
 
 /* History */
@@ -449,7 +497,7 @@ body {
   cursor: pointer;
   user-select: none;
 }
-.history-section summary:hover { background: #f9fafb; }
+.history-section summary:hover { background: var(--hover-bg); }
 .history-rounds {
   padding: 0 16px 12px;
 }
@@ -480,6 +528,160 @@ body {
   font-style: italic;
 }
 
+/* Player selection for manual assignment */
+.player-item.selected {
+  background: var(--primary-light);
+  outline: 2px solid var(--primary);
+}
+.player-item.pending {
+  background: var(--pending-bg);
+}
+.player-item.pending .player-name {
+  color: var(--pending-text);
+  font-weight: 600;
+}
+.player-name.selectable { cursor: pointer; }
+.player-pending-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: var(--pending-bg);
+  color: var(--pending-text);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px dashed var(--pending-border);
+}
+
+/* Pending court */
+.court-card.pending {
+  border-color: var(--pending-border);
+  border-style: dashed;
+}
+.court-card.pending .court-header { background: #d97706; }
+.court-body.clickable { cursor: pointer; }
+.pending-assignment {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pending-side {
+  padding: 8px 10px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 32px;
+}
+.pending-player {
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pending-player .btn-ghost { padding: 0 4px; font-size: 0.85rem; }
+.pending-slot {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  text-align: center;
+  font-style: italic;
+}
+.pending-buttons {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.pending-buttons .btn { flex: 1; }
+.btn-start-game {
+  background: #047857;
+  color: white;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+}
+.btn-start-game:hover:not(:disabled) { background: #065f46; }
+
+/* Score entry */
+.score-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.score-side {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+.score-side .side-names { flex: 1; font-size: 0.85rem; font-weight: 500; }
+.score-side input[type="number"] {
+  width: 60px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+.score-side input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
+.score-buttons {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.score-buttons .btn { flex: 1; }
+
+/* History winner */
+.history-match .winner { font-weight: 700; }
+.history-match .loser { color: var(--text-light); }
+.history-match .match-score {
+  font-weight: 600;
+  color: var(--primary);
+  margin-left: 6px;
+}
+
+/* Dark mode overrides for hardcoded colors */
+[data-theme="dark"] .btn-primary { background: var(--card); color: var(--primary); }
+[data-theme="dark"] .btn-assign { color: #111827; }
+[data-theme="dark"] .btn-end-game { background: #451a03; color: var(--danger); border-color: #7f1d1d; }
+[data-theme="dark"] .btn-end-game:hover { background: #7f1d1d; }
+[data-theme="dark"] .btn-outline { border-color: var(--border); color: var(--text); }
+[data-theme="dark"] .player-pref.wants-singles { background: #1e3a5f; color: #60a5fa; border-color: #2563eb; }
+[data-theme="dark"] .player-sitout { color: #fbbf24; }
+[data-theme="dark"] .team-item { background: var(--primary-light); }
+[data-theme="dark"] .team-item .team-lock.locked { background: #451a03; color: #fca5a5; }
+[data-theme="dark"] .court-card.inactive .court-header { background: #4b5563; }
+[data-theme="dark"] .court-card.pending .court-header { background: #92400e; }
+[data-theme="dark"] .pending-side { background: var(--card); }
+[data-theme="dark"] .pending-slot { border-color: var(--border); color: var(--text-light); }
+[data-theme="dark"] .score-side input[type="number"] { background: var(--bg); color: var(--text); border-color: var(--border); }
+[data-theme="dark"] .add-form input, [data-theme="dark"] .add-form select { background: var(--bg); color: var(--text); border-color: var(--border); }
+[data-theme="dark"] .team-form select { background: var(--bg); color: var(--text); border-color: var(--border); }
+[data-theme="dark"] .player-item input[type="checkbox"] { accent-color: var(--primary); }
+
+/* Theme toggle */
+.theme-toggle {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.25); }
+
 /* Responsive */
 @media (max-width: 900px) {
   .app-layout { flex-direction: column; }
@@ -496,6 +698,7 @@ body {
 <header class="header">
   <div><h1>Pickle Jar</h1><span style="font-size:0.8rem;opacity:0.85;">Everyone's in the jar. Shake it up.</span></div>
   <div class="header-actions">
+    <button class="theme-toggle" onclick="App.toggleTheme()" id="themeToggle" title="Toggle dark mode"></button>
     <button class="btn btn-primary btn-sm" onclick="App.clearHistory()">Clear History</button>
     <button class="btn btn-primary btn-sm" onclick="App.resetAll()">Reset All</button>
     <button class="btn btn-assign" onclick="App.assign()">Assign Courts</button>
@@ -580,6 +783,9 @@ const App = {
     sitoutCounts: {},
     round: 0,
     activeGames: {},       // courtId -> { side1: [...], side2: [...], mode: 'doubles'|'singles' }
+    scoringGames: {},      // courtId -> true (court is in score-entry mode)
+    pendingGames: {},      // courtId -> { side1: [ids], side2: [ids] } (manual placement staging)
+    selectedPlayerId: null,
     currentSittingOut: null,
     roundHistory: [],      // [{ round, courtId, side1, side2, mode }]
     nextId: 1,
@@ -587,8 +793,34 @@ const App = {
 
   // ─── Init ──────────────────────────────────────
   init() {
+    this.loadTheme();
     this.loadState();
     this.render();
+    setInterval(() => this.updateTimers(), 1000);
+  },
+
+  // ─── Theme ────────────────────────────────────
+  loadTheme() {
+    const saved = localStorage.getItem('pickleJarTheme');
+    const theme = saved || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    this.updateThemeIcon();
+  },
+
+  toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('pickleJarTheme', next);
+    this.updateThemeIcon();
+  },
+
+  updateThemeIcon() {
+    const btn = document.getElementById('themeToggle');
+    if (btn) {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      btn.textContent = isDark ? '\u2600' : '\u263E';
+    }
   },
 
   // ─── Persistence ───────────────────────────────
@@ -605,6 +837,8 @@ const App = {
         const parsed = JSON.parse(saved);
         this.state = { ...this.state, ...parsed };
         if (!this.state.activeGames) this.state.activeGames = {};
+        if (!this.state.scoringGames) this.state.scoringGames = {};
+        if (!this.state.pendingGames) this.state.pendingGames = {};
         if (!this.state.roundHistory) this.state.roundHistory = [];
         // Migrate old team data: canSplit -> doNotSplit
         for (const t of this.state.teams) {
@@ -641,7 +875,7 @@ const App = {
   },
 
   removePlayer(id) {
-    if (this.isPlayerOnCourt(id)) return;
+    if (this.isPlayerOnCourt(id) || this.isPlayerPending(id)) return;
     this.state.players = this.state.players.filter(p => p.id !== id);
     this.state.teams = this.state.teams.filter(t => t.p1 !== id && t.p2 !== id);
     this.saveState();
@@ -649,7 +883,7 @@ const App = {
   },
 
   togglePlayer(id) {
-    if (this.isPlayerOnCourt(id)) return;
+    if (this.isPlayerOnCourt(id) || this.isPlayerPending(id)) return;
     const p = this.state.players.find(p => p.id === id);
     if (p) p.active = !p.active;
     this.saveState();
@@ -714,7 +948,7 @@ const App = {
 
   // ─── Courts ────────────────────────────────────
   toggleCourt(id) {
-    if (this.state.activeGames[id]) return;
+    if (this.state.activeGames[id] || this.state.pendingGames[id]) return;
     const c = this.state.courts.find(c => c.id === id);
     if (c) c.active = !c.active;
     this.saveState();
@@ -722,23 +956,47 @@ const App = {
   },
 
   endGame(courtId) {
+    this.state.scoringGames[courtId] = true;
+    this.saveState();
+    this.render();
+  },
+
+  submitScore(courtId) {
+    const s1Input = document.getElementById(`score-s1-${courtId}`);
+    const s2Input = document.getElementById(`score-s2-${courtId}`);
+    const score1 = parseInt(s1Input.value);
+    const score2 = parseInt(s2Input.value);
+    if (isNaN(score1) || isNaN(score2)) {
+      alert('Please enter scores for both sides.');
+      return;
+    }
     const game = this.state.activeGames[courtId];
     if (game) {
       this.recordOpponents(game.side1, game.side2);
-      // Increment rounds played for each player in this game
       for (const id of [...game.side1, ...game.side2]) {
         const p = this.getPlayer(id);
         if (p) p.roundsPlayed = (p.roundsPlayed || 0) + 1;
       }
+      const winner = score1 > score2 ? 1 : score2 > score1 ? 2 : 0;
       this.state.roundHistory.push({
         round: this.state.round,
         courtId,
         side1: [...game.side1],
         side2: [...game.side2],
         mode: game.mode,
+        score1,
+        score2,
+        winner,
       });
     }
     delete this.state.activeGames[courtId];
+    delete this.state.scoringGames[courtId];
+    this.saveState();
+    this.render();
+  },
+
+  cancelScoring(courtId) {
+    delete this.state.scoringGames[courtId];
     this.saveState();
     this.render();
   },
@@ -747,6 +1005,100 @@ const App = {
     delete this.state.activeGames[courtId];
     this.saveState();
     this.render();
+  },
+
+  // ─── Manual Assignment ─────────────────────────
+  isPlayerPending(id) {
+    for (const pg of Object.values(this.state.pendingGames)) {
+      if (pg.side1.includes(id) || pg.side2.includes(id)) return true;
+    }
+    return false;
+  },
+
+  getPlayerPendingCourt(id) {
+    for (const [courtId, pg] of Object.entries(this.state.pendingGames)) {
+      if (pg.side1.includes(id) || pg.side2.includes(id)) return parseInt(courtId);
+    }
+    return null;
+  },
+
+  selectPlayer(id) {
+    if (this.isPlayerOnCourt(id) || this.isPlayerPending(id)) return;
+    const p = this.getPlayer(id);
+    if (!p || !p.active) return;
+    this.state.selectedPlayerId = this.state.selectedPlayerId === id ? null : id;
+    this.render();
+  },
+
+  placePlayer(courtId) {
+    const pid = this.state.selectedPlayerId;
+    if (!pid) return;
+    if (this.isPlayerOnCourt(pid) || this.isPlayerPending(pid)) return;
+
+    if (!this.state.pendingGames[courtId]) {
+      this.state.pendingGames[courtId] = { side1: [], side2: [] };
+    }
+    const pg = this.state.pendingGames[courtId];
+    const total = pg.side1.length + pg.side2.length;
+    if (total >= 4) return;
+
+    if (pg.side1.length < 2) {
+      pg.side1.push(pid);
+    } else {
+      pg.side2.push(pid);
+    }
+
+    this.state.selectedPlayerId = null;
+    this.saveState();
+    this.render();
+  },
+
+  removeFromPending(courtId, playerId) {
+    const pg = this.state.pendingGames[courtId];
+    if (!pg) return;
+    pg.side1 = pg.side1.filter(id => id !== playerId);
+    pg.side2 = pg.side2.filter(id => id !== playerId);
+    // Rebalance: keep side1 filled first
+    const all = [...pg.side1, ...pg.side2];
+    pg.side1 = all.slice(0, Math.min(2, Math.ceil(all.length / 2)));
+    pg.side2 = all.slice(pg.side1.length);
+    if (all.length === 0) delete this.state.pendingGames[courtId];
+    this.saveState();
+    this.render();
+  },
+
+  clearPending(courtId) {
+    delete this.state.pendingGames[courtId];
+    this.saveState();
+    this.render();
+  },
+
+  startGame(courtId) {
+    const pg = this.state.pendingGames[courtId];
+    if (!pg || pg.side1.length === 0 || pg.side2.length === 0) return;
+    const mode = (pg.side1.length === 1 && pg.side2.length === 1) ? 'singles' : 'doubles';
+    this.state.activeGames[courtId] = { side1: [...pg.side1], side2: [...pg.side2], mode, startedAt: Date.now() };
+    delete this.state.pendingGames[courtId];
+    this.saveState();
+    this.render();
+  },
+
+  // ─── Timers ─────────────────────────────────────
+  formatTimer(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+  },
+
+  updateTimers() {
+    const now = Date.now();
+    for (const [courtId, game] of Object.entries(this.state.activeGames)) {
+      const el = document.getElementById(`timer-${courtId}`);
+      if (el && game.startedAt) {
+        el.textContent = this.formatTimer(now - game.startedAt);
+      }
+    }
   },
 
   // ─── Utility ───────────────────────────────────
@@ -783,14 +1135,18 @@ const App = {
   // ─── Assignment Algorithm ──────────────────────
   assign() {
     const onCourt = this.getPlayersOnCourts();
-    const openCourts = this.state.courts.filter(c => c.active && !this.state.activeGames[c.id]);
+    const pendingPlayerIds = new Set();
+    for (const pg of Object.values(this.state.pendingGames)) {
+      for (const id of [...pg.side1, ...pg.side2]) pendingPlayerIds.add(id);
+    }
+    const openCourts = this.state.courts.filter(c => c.active && !this.state.activeGames[c.id] && !this.state.pendingGames[c.id]);
 
     if (openCourts.length === 0) {
       alert('No open courts. End a game to free up a court.');
       return;
     }
 
-    const available = this.state.players.filter(p => p.active && !onCourt.has(p.id));
+    const available = this.state.players.filter(p => p.active && !onCourt.has(p.id) && !pendingPlayerIds.has(p.id));
     if (available.length < 2) {
       alert('Not enough available players. End some games first.');
       return;
@@ -992,8 +1348,9 @@ const App = {
     }
 
     // Activate games (history recorded when End Game is clicked)
+    const now = Date.now();
     for (const a of assignments) {
-      this.state.activeGames[a.courtId] = { side1: [...a.side1], side2: [...a.side2], mode: a.mode };
+      this.state.activeGames[a.courtId] = { side1: [...a.side1], side2: [...a.side2], mode: a.mode, startedAt: now };
     }
 
     this.state.round++;
@@ -1133,7 +1490,8 @@ const App = {
       ],
       options: { useSkill: false, minimizeRepeats: false },
       opponentHistory: {}, sitoutCounts: {}, round: 0,
-      activeGames: {}, currentSittingOut: null, roundHistory: [], nextId: 1,
+      activeGames: {}, scoringGames: {}, pendingGames: {}, selectedPlayerId: null,
+      currentSittingOut: null, roundHistory: [], nextId: 1,
     };
     this.saveState();
     this.render();
@@ -1162,15 +1520,27 @@ const App = {
       const sitouts = this.getSitoutCount(p.id);
       const courtNum = this.getPlayerCourt(p.id);
       const onCourt = courtNum !== null;
-      return `<li class="player-item${onCourt ? ' on-court' : ''}">
-        <input type="checkbox" ${p.active ? 'checked' : ''} ${onCourt ? 'disabled' : ''} onchange="App.togglePlayer(${p.id})">
-        <span class="player-name">${this.esc(p.name)}</span>
+      const pendingCourt = this.getPlayerPendingCourt(p.id);
+      const isPending = pendingCourt !== null;
+      const isSelected = this.state.selectedPlayerId === p.id;
+      const locked = onCourt || isPending;
+      const itemClass = [
+        'player-item',
+        onCourt ? 'on-court' : '',
+        isPending ? 'pending' : '',
+        isSelected ? 'selected' : '',
+      ].filter(Boolean).join(' ');
+      const canSelect = p.active && !locked;
+      return `<li class="${itemClass}">
+        <input type="checkbox" ${p.active ? 'checked' : ''} ${locked ? 'disabled' : ''} onchange="App.togglePlayer(${p.id})">
+        <span class="player-name${canSelect ? ' selectable' : ''}" onclick="${canSelect ? `App.selectPlayer(${p.id})` : ''}">${this.esc(p.name)}</span>
         ${onCourt ? `<span class="player-court-badge">Ct ${courtNum}</span>` : ''}
+        ${isPending ? `<span class="player-pending-badge">Ct ${pendingCourt}</span>` : ''}
         ${p.wantsSingles ? `<span class="player-pref wants-singles" onclick="App.toggleSingles(${p.id})" title="Click to remove">1v1</span>` : ''}
         ${p.roundsPlayed ? `<span class="player-rounds">${p.roundsPlayed} gm${p.roundsPlayed !== 1 ? 's' : ''}</span>` : ''}
         ${p.score !== null ? `<span class="player-score">${p.score}</span>` : ''}
-        ${sitouts > 0 && !onCourt ? `<span class="player-sitout">sat ${sitouts}</span>` : ''}
-        <button class="btn btn-ghost btn-sm player-remove" onclick="App.removePlayer(${p.id})" ${onCourt ? 'disabled' : ''}>&times;</button>
+        ${sitouts > 0 && !onCourt && !isPending ? `<span class="player-sitout">sat ${sitouts}</span>` : ''}
+        <button class="btn btn-ghost btn-sm player-remove" onclick="App.removePlayer(${p.id})" ${locked ? 'disabled' : ''}>&times;</button>
       </li>`;
     }).join('');
   },
@@ -1209,15 +1579,60 @@ const App = {
 
     el.innerHTML = this.state.courts.map(court => {
       const game = this.state.activeGames[court.id];
+      const pending = this.state.pendingGames[court.id];
       const hasGame = !!game;
+      const hasPending = !!pending;
       const cls = [
         'court-card',
         !court.active ? 'inactive' : '',
         hasGame ? 'game-active' : '',
+        hasPending ? 'pending' : '',
       ].filter(Boolean).join(' ');
 
+      const isScoring = !!this.state.scoringGames[court.id];
       let bodyHTML;
-      if (hasGame) {
+      if (hasPending && !hasGame) {
+        const canStart = pending.side1.length >= 1 && pending.side2.length >= 1;
+        const renderSlots = (side, sideNum) => {
+          const slots = [];
+          for (let i = 0; i < 2; i++) {
+            if (side[i]) {
+              const p = this.getPlayer(side[i]);
+              slots.push(`<div class="pending-player"><span>${p ? this.esc(p.name) : '?'}</span><button class="btn btn-ghost btn-sm" onclick="App.removeFromPending(${court.id},${side[i]})">&times;</button></div>`);
+            } else {
+              slots.push(`<div class="pending-slot">tap player, then tap here</div>`);
+            }
+          }
+          return slots.join('');
+        };
+        bodyHTML = `<div class="pending-assignment" onclick="App.placePlayer(${court.id})">
+          <div class="pending-side side-1">${renderSlots(pending.side1, 1)}</div>
+          <div class="court-vs">VS</div>
+          <div class="pending-side side-2">${renderSlots(pending.side2, 2)}</div>
+          <div class="pending-buttons">
+            ${canStart ? `<button class="btn btn-start-game" onclick="event.stopPropagation();App.startGame(${court.id})">Start Game</button>` : ''}
+            <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();App.clearPending(${court.id})">Clear</button>
+          </div>
+        </div>`;
+      } else if (hasGame && isScoring) {
+        const s1Names = game.side1.map(id => { const p = this.getPlayer(id); return p ? this.esc(p.name) : '?'; }).join(' & ');
+        const s2Names = game.side2.map(id => { const p = this.getPlayer(id); return p ? this.esc(p.name) : '?'; }).join(' & ');
+        bodyHTML = `<div class="score-entry">
+          <div class="score-side side-1">
+            <span class="side-names">${s1Names}</span>
+            <input type="number" id="score-s1-${court.id}" min="0" placeholder="0" onkeydown="if(event.key==='Enter')App.submitScore(${court.id})">
+          </div>
+          <div class="court-vs">VS</div>
+          <div class="score-side side-2">
+            <span class="side-names">${s2Names}</span>
+            <input type="number" id="score-s2-${court.id}" min="0" placeholder="0" onkeydown="if(event.key==='Enter')App.submitScore(${court.id})">
+          </div>
+          <div class="score-buttons">
+            <button class="btn btn-assign" style="padding:8px 16px;font-size:0.85rem;" onclick="App.submitScore(${court.id})">Submit</button>
+            <button class="btn btn-outline" onclick="App.cancelScoring(${court.id})">Cancel</button>
+          </div>
+        </div>`;
+      } else if (hasGame) {
         const modeLabel = game.mode === 'singles' ? '1v1' : '2v2';
         bodyHTML = `<div class="court-assignment">
           <div class="court-side side-1">
@@ -1233,18 +1648,23 @@ const App = {
           </div>
         </div>`;
       } else {
-        bodyHTML = `<div class="court-empty">${court.active ? 'Open' : 'Inactive'}</div>`;
+        const hasSelected = !!this.state.selectedPlayerId;
+        const clickHandler = court.active && hasSelected ? `onclick="App.placePlayer(${court.id})"` : '';
+        const label = !court.active ? 'Inactive' : hasSelected ? 'Tap to place player here' : 'Open';
+        bodyHTML = `<div class="court-empty${court.active && hasSelected ? ' clickable' : ''}" ${clickHandler}>${label}</div>`;
       }
 
       const modeBadge = hasGame ? `<span class="court-mode-badge">${game.mode === 'singles' ? '1v1' : '2v2'}</span>` : '';
-      const statusLabel = hasGame ? 'Playing' : '';
+      const timerBadge = hasGame && game.startedAt ? `<span class="court-timer" id="timer-${court.id}">${this.formatTimer(Date.now() - game.startedAt)}</span>` : '';
+      const hasPendingForStatus = hasPending && !hasGame;
+      const statusLabel = hasGame ? 'Playing' : hasPendingForStatus ? 'Setting up' : '';
 
       return `<div class="${cls}">
         <div class="court-header">
-          <span>Court ${court.id} ${modeBadge}</span>
+          <span>Court ${court.id} ${modeBadge} ${timerBadge}</span>
           <div class="court-controls">
-            ${hasGame ? `<span class="court-status">${statusLabel}</span>` : ''}
-            <label><input type="checkbox" ${court.active ? 'checked' : ''} ${hasGame ? 'disabled' : ''} onchange="App.toggleCourt(${court.id})"> On</label>
+            ${statusLabel ? `<span class="court-status">${statusLabel}</span>` : ''}
+            <label><input type="checkbox" ${court.active ? 'checked' : ''} ${hasGame || hasPending ? 'disabled' : ''} onchange="App.toggleCourt(${court.id})"> On</label>
           </div>
         </div>
         <div class="court-body">${bodyHTML}</div>
@@ -1309,9 +1729,13 @@ const App = {
           const s1 = m.side1.map(id => { const p = this.getPlayer(id); return p ? this.esc(p.name) : '?'; });
           const s2 = m.side2.map(id => { const p = this.getPlayer(id); return p ? this.esc(p.name) : '?'; });
           const mode = m.mode === 'singles' ? '1v1' : '2v2';
+          const hasScores = m.score1 != null && m.score2 != null;
+          const s1Class = hasScores ? (m.winner === 1 ? 'winner' : m.winner === 2 ? 'loser' : '') : '';
+          const s2Class = hasScores ? (m.winner === 2 ? 'winner' : m.winner === 1 ? 'loser' : '') : '';
+          const scoreText = hasScores ? `<span class="match-score">${m.score1}-${m.score2}</span>` : '';
           return `<div class="history-match">
             <span class="court-label">Ct ${m.courtId} (${mode})</span>
-            ${s1.join(' &amp; ')} vs ${s2.join(' &amp; ')}
+            <span class="${s1Class}">${s1.join(' &amp; ')}</span> vs <span class="${s2Class}">${s2.join(' &amp; ')}</span>${scoreText}
           </div>`;
         }).join('')}
       </div>`;
